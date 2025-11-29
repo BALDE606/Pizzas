@@ -1,0 +1,76 @@
+// Importa Express y MySQL
+const express = require('express');
+const app = express();
+const mysql = require('mysql2');
+
+// Requerido para parsear JSON
+app.use(express.json());
+
+// Puerto del servidor
+const PORT = 3000;
+
+// Configuración de la conexión a la base de datos MySQL
+const configuracionBD = {
+      host: 'localhost',          
+      user: 'adminpissa',        
+      password: 'Penjamo-123$',
+      database: 'pizzapissa'    
+};
+// Crear la conexión a la base de datos
+const conexion = mysql.createConnection(configuracionBD);
+
+conexion.connect(err => {
+      if (err) {
+            console.error('Error al conectar a la base de datos: ' + err.stack);
+            return;
+      }
+      console.log('Conexión a MySQL establecida con el ID: ' + conexion.threadId);
+});
+
+
+// Ruta POST que recibe el nombre en el cuerpo de la solicitud
+app.post('/nuevo_pedido', (req, res) => {
+  const { nombre, direccion, telefono, importe, pizzas } = req.body;
+  const jPizzas = JSON.stringify(pizzas);
+ 
+  if (nombre) {
+      const sql = 'INSERT INTO pedidos (nombre, direccion, telefono, importe, pizzas ) VALUES ( ?, ?, ?, ?, ? )';
+     
+      const values = [nombre, direccion, telefono, importe, jPizzas  ];
+
+      conexion.query(sql, values, (err, result) => {
+            if (err) {
+                  console.error('Error al insertar la orden: ' + err.message);
+                  // Error 500 para errores del servidor
+                  return res.status(500).json({
+                        error: 'Error del servidor al insertar la orden',
+                        detalle: err.message
+                  });
+            }
+            //Si la consulta es exitosa
+            res.status(201).json({
+                  mensaje: 'Orden creada exitosamente',
+                  id_insertado: result.insertId,
+                  orden: { nombre, direccion, telefono, importe }
+            });
+      });
+  } else {
+    res.status(400).send('Falta el nombre en el cuerpo de la solicitud');
+  }
+});
+
+// Inicia el servidor
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});
+
+Ahora, crea una base de datos, con el nombre de pizzapissa y en ella una tabla con el nombre de pedidos, con los campos:
+
+id              int() autoincremental
+fecha       timestamp() con valor de timestamp por default
+nombre    string(60)
+direccion string(250)
+teleforno  string(12)
+importe    float()
+pizzas       json()
+

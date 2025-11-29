@@ -1,0 +1,11 @@
+.social a{
+    text-decoration: none;
+    font-family: monospace;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.social img{
+    width: 50px;
+}

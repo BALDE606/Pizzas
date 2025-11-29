@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'Playwrite';
+    src: url('../assets/fonts/PlaywriteUSModern-Regular.ttf');
+}
+.encabezado{
+    background: linear-gradient(to right, #265cf2, #0026fd);
+    display: flex;
+    justify-content: space-around;
+    animation: fadeIn 1s ease-in;
+    margin: none;
+}
+
+.encabezado img{
+    width: 130px;
+}
+
+.encabezado h2{
+    font-family: 'Playwrite';
+    font-size: 25px;
+    padding-top: 35px ;
+    color: white;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
